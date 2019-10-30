@@ -1028,21 +1028,21 @@ func TextBox(bounds rl.Rectangle, text string) string {
 }
 
 // SaveGuiStyle - Save GUI style file
-func SaveGuiStyle(fileName string) {
+func SaveGuiStyle(fileName string) error {
 	var styleFile string
 	for i := 0; i < len(propertyName); i++ {
 		styleFile += fmt.Sprintf("%-40s0x%x\n", propertyName[i], GetStyleProperty(Property(i)))
 	}
 
-	ioutil.WriteFile(fileName, []byte(styleFile), 0644)
+	return ioutil.WriteFile(fileName, []byte(styleFile), 0644)
 }
 
 // LoadGuiStyle - Load GUI style file
-func LoadGuiStyle(fileName string) {
+func LoadGuiStyle(fileName string) error {
 	file, err := rl.OpenAsset(fileName)
 	if err != nil {
 		rl.TraceLog(rl.LogWarning, "[%s] GUI style file could not be opened", fileName)
-		return
+		return err
 	}
 	defer file.Close()
 
@@ -1074,6 +1074,8 @@ func LoadGuiStyle(fileName string) {
 			}
 		}
 	}
+
+	return nil
 }
 
 // SetStyleProperty - Set one style property
